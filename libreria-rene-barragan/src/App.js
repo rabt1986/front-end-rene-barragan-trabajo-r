@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import GlobalRouter from "./routes/GlobalRouter";
+import {Footer} from "./components/Footer";
+import {useBooks} from './hooks/useBooks';
+import { BookContext } from './context/BookContext';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+  const books = useBooks();
+  const [cart, setCart] = useState([]);
+  const addToCart = (book) => {
+    setCart([...cart, { id: book.id, name: book.volumeInfo.title }]);
+    };
+
+    const removeFromCart = (bookId) => {
+        setCart(cart.filter(book => book.id !== bookId));
+    };
+   
+
+
+   return (
+        <BookContext.Provider value={{books, cart, addToCart, removeFromCart}}>
+            <GlobalRouter></GlobalRouter>
+            <Footer />
+        </BookContext.Provider>
   );
 }
 
